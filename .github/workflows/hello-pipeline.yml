@@ -1,4 +1,3 @@
-
 # .github/workflows/hello-pipeline.yml
 
 # Runs on every push to main — proves the pipeline mechanism works
@@ -72,27 +71,3 @@ jobs:
           echo 'Real deployment added in Week 3 (Docker + Dev VM + SSH)'
 
           echo 'Pipeline completed successfully!'
-
-Step 6  Commit and Push
-
-
-You have created the workflow file. Now commit it and push to main — this is what triggers the pipeline for the very first time.
-
-
-In VS Code terminal:  Stage, commit, and push the new file:
-
-# Stage the new workflow file
-
-git add .github/workflows/hello-pipeline.yml
-
- 
-
-# Commit with a descriptive message
-
-git commit -m "Week 2: add hello-pipeline workflow"
-
- 
-
-# Push to main — this triggers the pipeline
-
-git push origin main
