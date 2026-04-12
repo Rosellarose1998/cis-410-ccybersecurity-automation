@@ -1,34 +1,98 @@
+
+# .github/workflows/hello-pipeline.yml
+
+# Runs on every push to main — proves the pipeline mechanism works
+
+ 
+
 name: Hello Pipeline
 
+ 
+
 on:
+
   push:
+
     branches:
+
       - main
 
+ 
+
 jobs:
+
   pipeline:
+
     name: Run Pipeline Stages
+
     runs-on: self-hosted
 
+ 
+
     steps:
+
       - name: Checkout repository
+
         uses: actions/checkout@v4
 
+ 
+
       - name: Build stage
+
         run: |
+
           echo '=== BUILD STAGE ==='
+
           echo "Runner hostname: $(hostname)"
+
           echo "Triggered by commit: ${{ github.sha }}"
+
           echo "Branch: ${{ github.ref_name }}"
 
+ 
+
       - name: Test stage
+
         run: |
+
           echo '=== TEST STAGE ==='
+
           echo 'No automated tests yet — security scanning added in Week 5'
+
           echo 'All checks passed!'
 
+ 
+
       - name: Deploy stage
+
         run: |
+
           echo '=== DEPLOY STAGE ==='
+
           echo 'Real deployment added in Week 3 (Docker + Dev VM + SSH)'
+
           echo 'Pipeline completed successfully!'
+
+Step 6  Commit and Push
+
+
+You have created the workflow file. Now commit it and push to main — this is what triggers the pipeline for the very first time.
+
+
+In VS Code terminal:  Stage, commit, and push the new file:
+
+# Stage the new workflow file
+
+git add .github/workflows/hello-pipeline.yml
+
+ 
+
+# Commit with a descriptive message
+
+git commit -m "Week 2: add hello-pipeline workflow"
+
+ 
+
+# Push to main — this triggers the pipeline
+
+git push origin main
