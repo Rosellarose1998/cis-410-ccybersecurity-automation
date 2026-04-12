@@ -1,4 +1,4 @@
-name: Hello Pipeline
+name: Hello Pipeline Fixed
 
 on:
   push:
