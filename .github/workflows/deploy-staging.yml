@@ -85,12 +85,12 @@ jobs:
 
           echo "=== Deploying ${GITHUB_SHA:0:7} to staging (port ${HOST_PORT}) ==="
 
-          sudo docker compose down --remove-orphans
-          sudo HOST_PORT="${HOST_PORT}" ENVIRONMENT="${ENVIRONMENT}" \
-               DEPLOY_TIME="${DEPLOY_TIME}" GITHUB_SHA="${GITHUB_SHA}" \
-               GITHUB_REF_NAME="${GITHUB_REF_NAME}" \
-               docker compose up -d --build
+          export HOST_PORT=5001
+          export ENVIRONMENT=staging
 
+          sudo docker compose down --remove-orphans
+          sudo docker compose up -d --build
+          
           echo "=== Staging deploy complete ==="
           sudo docker compose ps
           EOF
