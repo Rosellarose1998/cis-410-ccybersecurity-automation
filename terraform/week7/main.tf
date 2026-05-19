@@ -20,7 +20,7 @@ terraform {
 
   backend "gcs" {
 
-    bucket = "cis410-yourname-xxxx-tfstate"   # ← your exact bucket name
+    bucket = "cis410-kaliabdulla-tfstate" # ← your exact bucket name
 
     prefix = "terraform/week7"
 
@@ -31,7 +31,7 @@ terraform {
 
     google = {
 
-      source  = "hashicorp/google"
+      source = "hashicorp/google"
 
       version = "~> 5.0"
 
@@ -46,7 +46,7 @@ provider "google" {
 
   project = var.project_id
 
-  region  = var.region
+  region = var.region
 
 }
 
@@ -62,15 +62,15 @@ module "networking" {
   source = "./modules/networking"
 
 
-  project_id  = var.project_id
+  project_id = var.project_id
 
-  region      = var.region
+  region = var.region
 
-  vpc_name    = "cis410-vpc"
+  vpc_name = "cis410-vpc"
 
   subnet_cidr = "10.0.1.0/24"
 
-  my_ip_cidr  = var.my_ip_cidr
+  my_ip_cidr = var.my_ip_cidr
 
 }
 
