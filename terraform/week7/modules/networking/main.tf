@@ -1,7 +1,7 @@
 # terraform/week7/modules/networking/main.tf
 
 # ────────────────────────────────────────────────────────────────────────
-# Child module: VPC, public subnet, and three firewall rules.
+# Child module: VPC, public subnet, and firewall rules.
 # Called by the root module (terraform/week7/main.tf).
 # ────────────────────────────────────────────────────────────────────────
 
@@ -77,4 +77,25 @@ resource "google_compute_firewall" "deny_all_ingress" {
 
   source_ranges = ["0.0.0.0/0"]
   description   = "Explicit deny-all fallback — blocks unmatched traffic"
+}
+
+# ── Firewall: HTTPS from the internet ───────────────────────────────────
+
+resource "google_compute_firewall" "allow_https" {
+
+  name = "${var.vpc_name}-allow-https-manual"
+
+  network = google_compute_network.vpc.name
+
+  project = var.project_id
+
+  allow {
+    protocol = "tcp"
+    ports    = ["443"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+
+  description = "Manual rule created outside Terraform (drift demo)"
+
 }
