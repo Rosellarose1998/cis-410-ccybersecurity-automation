@@ -2,8 +2,7 @@
 
 # ─────────────────────────────────────────────────────────────────────────
 # Builds the Flask app container, pushes to Artifact Registry,
-# and deploy to Cloud Run. Manual trigger — same promotion gate as
-# the on-premise deploy-staging.yml and deploy-prod.yml from Week 4.
+# and deploys to Cloud Run.
 # ─────────────────────────────────────────────────────────────────────────
 
 name: Deploy to Cloud Run
@@ -32,31 +31,35 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # OIDC replaces SSH key secrets
+      # Authenticate to Google Cloud using OIDC
       - name: Authenticate to GCP via OIDC
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ vars.WIF_PROVIDER }}
           service_account: ${{ vars.SA_EMAIL }}
+          token_format: access_token
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
       - name: Configure Docker for Artifact Registry
-        run: gcloud auth configure-docker ${REGION}-docker.pkg.dev --quiet
+        run: |
+          gcloud auth configure-docker ${REGION}-docker.pkg.dev --quiet
 
-      # Build and push image using commit SHA
+      # Build Docker image and push to Artifact Registry
       - name: Build and push image
         run: |
           PROJECT_ID=$(gcloud config get-value project)
+
           IMAGE_PATH=${REGISTRY}/${PROJECT_ID}/${REPO}/${IMAGE}:${{ github.sha }}
 
           docker build -t ${IMAGE_PATH} .
+
           docker push ${IMAGE_PATH}
 
           echo "IMAGE_PATH=${IMAGE_PATH}" >> $GITHUB_ENV
 
-      # Deploy to Cloud Run
+      # Deploy container to Cloud Run
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy ${SERVICE} \
@@ -67,8 +70,9 @@ jobs:
             --max-instances 3 \
             --quiet
 
+      # Print deployed service URL
       - name: Print service URL
         run: |
           gcloud run services describe ${SERVICE} \
             --region ${REGION} \
-            --format "value(status.url)"
+            --format="value(status.url)"
